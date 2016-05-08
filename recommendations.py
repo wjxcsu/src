@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 critics={'Lisa Rose': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,
  'Just My Luck': 3.0, 'Superman Returns': 3.5, 'You, Me and Dupree': 2.5, 
  'The Night Listener': 3.0},
@@ -16,6 +17,7 @@ critics={'Lisa Rose': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,
  'The Night Listener': 3.0, 'Superman Returns': 5.0, 'You, Me and Dupree': 3.5},
 'Toby': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0,'Superman Returns':4.0}}
 import math
+#计算距离 欧式距离
 def sim_distance(prefs,person1,person2):
 	sum=0
 	for item in prefs[person1]:
@@ -23,6 +25,7 @@ def sim_distance(prefs,person1,person2):
 			sum+=math.pow(prefs[person1][item]-prefs[person2][item],2)
 	return 1/(1+math.sqrt(sum))
 	
+#计算距离 皮尔逊相关度
 def sim_person(prefs,p1,p2):
 	si={}
 	for item in prefs[p1]:
@@ -44,11 +47,12 @@ def sim_person(prefs,p1,p2):
 	if den==0:return 0
 	return num/den 
 
+#计算前n个与自己相似的人
 def topMatches(prefs,person,n=5,similarity=sim_person):
 	score=[(similarity(prefs,person,people),people) for people in prefs if people!=person]
 	score.sort(reverse=True)
 	return score[0:n]
-
+#获得推荐的电影
 def getRecommendations(prefs,person,similarity=sim_person):
 	totals={}
 	simSums={}
@@ -68,7 +72,7 @@ def getRecommendations(prefs,person,similarity=sim_person):
 	
 	
 	
-	
+#对critics进行转置，得到以影片为主键的词典
 def transformPrefs(prefs):
 	result={}
 	for person in prefs:
@@ -79,7 +83,7 @@ def transformPrefs(prefs):
 	
 	
 	
-
+#计算每部影片的与别的影片的相似度
 def calculateSimilarItems(prefs,n=10):
 	result={}
 	itemPrefs=transformPrefs(prefs)
@@ -107,3 +111,7 @@ def getRecommendedItems(prefs,itemMatch,user):
 	ranking=[(score/totalSim[item],item) for item,score in score.items()]
 	ranking.sort(reverse=True)
 	return ranking
+	
+	
+	
+print 'git learning...'
