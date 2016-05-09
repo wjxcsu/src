@@ -59,13 +59,17 @@ def getRecommendations(prefs,person,similarity=sim_person):
 	for other in prefs:
 		if other!=person:
 			sim=similarity(prefs,person,other)
-			if sim<0:continue
+			if sim<=0:continue
 		for item in prefs[other]:
 			if item not in prefs[person]:
 				totals.setdefault(item,0)
 				totals[item]+=sim*prefs[other][item]
 				simSums.setdefault(item,0)
 				simSums[item]+=sim
+	#for item,sim in simSums.items():
+	#	if sim==0:
+	#		print item,sim
+	#		print 'totals:',totals[item]
 	ranking=[(totals[item]/simSums[item],item) for item in totals]
 	ranking.sort(reverse=True)
 	return ranking
@@ -113,5 +117,16 @@ def getRecommendedItems(prefs,itemMatch,user):
 	return ranking
 	
 	
-	
-print 'git learning...'
+
+def loadMovieLens(path='..\ml-100k'):
+	movies={}
+#获取影片标题
+	for line in open(path+'\u.item'):
+		(id,title)=line.split('|')[0:2]
+		movies[id]=title
+	prefs={}
+	for line in open(path+'\u.data'):
+		(user,movieid,rating,ts)=line.split('\t')
+		prefs.setdefault(user,{})
+		prefs[user][movies[movieid]]=float(rating)
+	return prefs
